@@ -1,3 +1,42 @@
 body {
   background: lavender;
+  text-align: center;
+}
+
+* {
+  font-family: helvetica;
+  /* border: 2px solid gold; */
+  color: gray;
+}
+
+#discard-container {
+  height: 300px;
+  background: lightgray;
+}
+
+#player-container {
+  display: flex;
+  justify-content: space-around;
+  height: 200px;
+  background: pink;
+}
+
+.playerTitle {
+  margin: 10px;
+}
+
+.playerBox {
+  margin: 3px 0;
+  height: 190px;
+  width: 190px;
+  background: ivory;
+}
+
+img {
+  margin: 0 2px;
+  width: 14%;
+}
+
+#buttonDiv {
+  padding: 10px 0;
 }
