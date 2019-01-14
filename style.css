@@ -40,14 +40,14 @@ h2 {
 
 #card-container {
   width: 100%;
-  height: 80%;
+  height: 60%;
 }
 
 #text-container {
   overflow: scroll;
   border: 1px solid gray;
   width: 100%;
-  height: 20%;
+  height: 35%;
   margin-bottom: -3%;
 }
 
