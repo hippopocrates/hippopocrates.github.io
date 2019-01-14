@@ -52,7 +52,7 @@ class Player {
   }
 }
 
-const user = new Player('Ya girl', true)
+const user = new Player('My girl', true)
 const opponent1 = new Player('Opponent-1', false)
 const opponent2 = new Player('Opponent-2', false)
 const players = [user, opponent1, opponent2]
