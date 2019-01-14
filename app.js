@@ -1,75 +1,300 @@
 $(() => {
 
-let userTurn = true;
 const cardOrder = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING'] //value
 let currentPosition = 0
 const discardPile = []
+let bullshitCalled = false
 
 class Player {
-  constructor(name, size) {
-    this.name = name;
-    this.deckSize = size
+  constructor(name, turn) {
+    this.name = name
+    this.turn = turn
     this.deck = []
-    this.images = []
+    this.currentRoundDiscard = 0
+    this.numCurrentPositionCards = 0
     this.isLying = false
+  }
+  checkLying(currentPlayer) {
+    for (let i = 0; i < this.deck.length; i++){
+      if (this.deck[i].value === cardOrderPosition()){
+        this.numCurrentPositionCards++
+      }
+    }
+    if ((currentPlayer.currentRoundDiscard + this.numCurrentPositionCards) > 4){
+      bullshitCalled = true;
+      alert(this.name + ' accuses ' + currentPlayer.name + ' of lying!')
+      if (currentPlayer.isLying){
+        alert(currentPlayer.name + ' WAS lying!')
+          currentPlayer.deck = currentPlayer.deck.concat(discardPile)
+          sortDeck(currentPlayer)
+          if(currentPlayer === user){
+            insertCardImgUser();
+          } else {
+            insertCardImgOpponents(currentPlayer)
+          }
+          discardPile.length = 0;
+          $('#discard-container').empty()
+      } else {
+        alert(currentPlayer.name + ' was NOT lying!')
+        this.deck = this.deck.concat(discardPile)
+        sortDeck(this)
+        if(currentPlayer === user){
+          insertCardImgUser();
+        } else {
+          insertCardImgOpponents(currentPlayer)
+        }
+        discardPile.length = 0;
+        $('#discard-container').empty()
+      }
+      this.numCurrentPositionCards = 0
+    }
+    this.numCurrentPositionCards = 0
   }
 }
 
-const user = new Player('You', 18)
-const opponent1 = new Player('Opponent 1', 17)
-const opponent2 = new Player('Opponent 2',17)
-const playerOrder = [user, opponent1, opponent2]
+const user = new Player('Caroline', true)
+const opponent1 = new Player('Opponent-1', false)
+const opponent2 = new Player('Opponent-2', false)
+const players = [user, opponent1, opponent2]
 
 $.ajax({
   url: 'https://deckofcardsapi.com/api/deck/new/draw/?count=52',
   success: (data) => {
-    buildPlayerDeck(data)
-    gameStart()
-    oneRound(playerOrder)
+    buildPlayerDeck(data);
   },
   error: () => {
-    console.log('bad request')
+    console.log('bad request');
   }
 })
 
-const buildPlayerDeck = data => {
-  for (let i = 0; i < 18; i++){
-    user.deck.push(data.cards[i])
-    $('#cardDiv').append($('<img>').attr('src', data.cards[i].image))
-  }
-  for (let i = 18; i < 35; i++){
-    opponent1.deck.push(data.cards[i])
-    $('#opponent1').append($('<img>').attr('src', 'playing-card-back.jpg').addClass('cardBackEnemy1'))
-  }
-  for (let i = 35; i < 52; i++){
-     opponent2.deck.push(data.cards[i])
-     $('#opponent2').append($('<img>').attr('src', 'playing-card-back.jpg').addClass('cardBackEnemy2'))
-
-  }
-}
-
-const cardOrderPosition = () => cardOrder[currentPosition++]
-
-const discard = (player, card) => {
-  for (let i = 0; i < player.deckSize; i++){
-    if (player.deck[i].value === card){
-      discardPile.push(player.deck.splice(i, 1))
-      player.deckSize--
-      if (player.name === 'Opponent 1'){
-        $('.cardBackEnemy1').first().remove()
-      } else if (player.name === 'Opponent 2'){
-        $('.cardBackEnemy2').first().remove()
-      }
+const winner = () => {
+  for(let i = 0; i < players.length; i++){
+    if (players[i].deck.length === 0){
+      alert(players[i].name + ' wins!')
+      return true
+    } else {
+      return false
     }
   }
 }
 
+const buildPlayerDeck = data => {
+  for (let i = 0; i < 18; i++){
+    user.deck.push(data.cards[i])
+  }
+  sortDeck(user)
+  insertCardImgUser()
 
-const oneRound = playerOrderArr => {
-  for (let i = 0; i < playerOrderArr.length; i++){
-      discard(playerOrderArr[i], cardOrderPosition())
+  for (let i = 18; i < 35; i++){
+    opponent1.deck.push(data.cards[i])
+  }
+  sortDeck(opponent1)
+  insertCardImgOpponents(opponent1)
+
+  for (let i = 35; i < 52; i++){
+     opponent2.deck.push(data.cards[i])
+  }
+  sortDeck(opponent2)
+  insertCardImgOpponents(opponent2)
+}
+
+const sortDeck = (player) => {
+  let unsortedDeck = player.deck
+  let sortedDeck = []
+  for (let i = 0; i < cardOrder.length; i++){
+    for (let j = 0; j < unsortedDeck.length; j++){
+      if (unsortedDeck[j].value === cardOrder[i])
+          sortedDeck.push(unsortedDeck[j])
+    }
+  }
+  player.deck = sortedDeck
+}
+
+//displays front of card for user only
+const insertCardImgUser = () => {
+  $('#cardDiv').empty()
+  for (let i = 0; i < user.deck.length; i++){
+    $playerCardImg = $('<img>').attr({ src:user.deck[i].image, id:user.deck[i].code}).addClass(user.deck[i].value)
+
+    $playerCardImg.on('click', (event) => {
+      if(user.turn){
+        user.currentRoundDiscard++
+        event.target.remove()
+        $('#discard-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
+        if(event.target.className !== cardOrderPosition()){
+          user.isLying = true
+        }
+        for (let i = 0; i < user.deck.length; i++){
+          if (event.target.id === user.deck[i].code){
+            discardPile.push(user.deck[i])
+            user.deck.splice(i, 1)
+          }
+        }
+      }
+
+    })
+    $('#cardDiv').append($playerCardImg)
   }
 }
+
+const insertCardImgOpponents = (player) => {
+  $('#' + player.name).empty()
+  for (let i = 0; i < player.deck.length; i++){
+    $('#' + player.name).append($('<img>').attr('src', 'playing-card-back.jpg'))
+  }
+}
+
+const cardOrderPosition = () => {
+  if (cardOrder[currentPosition] === undefined){
+    currentPosition = 0
+  }
+  return cardOrder[currentPosition]
+}
+
+
+const opponentDiscard = (player, card) => {
+  for (let i = 0; i < player.deck.length; i++){
+    if (player.deck[i].value === card){
+      discardPile.push(player.deck[i])
+      player.deck.splice(i, 1)
+      player.currentRoundDiscard++
+      $('#' + player.name).children('img').eq(0).remove()
+      $('#discard-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
+    }
+  }
+  if (player.currentRoundDiscard === 0){
+    discardPile.push(player.deck[0])
+    player.deck.splice(0, 1)
+    player.currentRoundDiscard++
+    player.isLying = true
+    $('#' + player.name).children('img').eq(0).remove()
+    $('#discard-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
+  }
+}
+
+const alertMove = (player) => {
+  if (player.currentRoundDiscard === 0){
+    alert(player.name + ' played NO ' + cardOrderPosition() + '\'s!')
+  } else if (player.currentRoundDiscard === 1){
+    alert(player.name + ' played ' + player.currentRoundDiscard + ' "' + cardOrderPosition() + '"')
+  } else {
+    alert(player.name + ' played ' + player.currentRoundDiscard + ' ' + cardOrderPosition() + '\'s!')
+  }
+  if (player.isLying){
+    alert(player.name + ' is lying!')
+  }
+
+}
+
+const returnCurrentPlayer = () => {
+  for (let i = 0; i < players.length; i++){
+    if (players[i].turn === true){
+      return players[i]
+    }
+  }
+}
+
+const takeTurns = () => {
+  let currentPlayer
+  let nextPlayer
+  for (let i = 0; i < players.length; i++){
+    if (players[i].turn === true){
+      currentPlayer = players[i]
+      if(i === 2){
+        nextPlayer = players[0]
+      } else{
+        nextPlayer = players[i+1]
+      }
+    }
+  }
+  for (let i = 0; i < players.length; i++){
+    if (players[i] === currentPlayer){
+      players[i].currentRoundDiscard = 0
+      players[i].turn = false
+    }
+    if (players[i] === nextPlayer){
+      players[i].turn = true;
+    }
+  }
+}
+
+const returnOpponentNotInPlay = () => {
+  for (let i = 1; i < players.length; i++){
+    if(players[i].turn === false){
+      return players[i]
+    }
+  }
+}
+
+const oneRound = () => {
+  if(!user.turn){
+    let currentPlayer = returnCurrentPlayer()
+    opponentDiscard(currentPlayer, cardOrderPosition())
+    alertMove(currentPlayer)
+    returnOpponentNotInPlay().checkLying(currentPlayer)
+    currentPosition++
+  }
+}
+
+$('#done-btn').on('click', () => {
+  if (user.turn && !winner()){
+    alertMove(user)
+    opponent1.checkLying(user)
+    if(!bullshitCalled){
+      opponent2.checkLying(user)
+    }
+    user.currentRoundDiscard = 0
+    currentPosition++
+    user.isLying = false
+    bullshitCalled = false
+
+    if(!winner()){
+      takeTurns()
+      oneRound()
+    }
+  }
+})
+
+$('#bs-btn').on('click', () => {
+  if(bullshitCalled === false && user.turn === false && !winner()){
+    alert(user.name + ' accused ' + returnCurrentPlayer().name + ' of lying!')
+    if(returnCurrentPlayer().isLying){
+      alert(returnCurrentPlayer().name + ' WAS lying!')
+      returnCurrentPlayer().deck = returnCurrentPlayer().deck.concat(discardPile)
+      sortDeck(returnCurrentPlayer())
+      insertCardImgOpponents(returnCurrentPlayer())
+      discardPile.length = 0;
+      $('#discard-container').empty()
+
+    } else {
+      alert(returnCurrentPlayer().name + ' was NOT lying!')
+      user.deck = user.deck.concat(discardPile)
+      sortDeck(user)
+      insertCardImgUser()
+      discardPile.length = 0;
+      $('#discard-container').empty()
+    }
+
+    if(!winner()){
+      takeTurns()
+      oneRound()
+    }
+  }
+})
+
+$('#noBS-btn').on('click', () => {
+  if(bullshitCalled === false && user.turn === false && !winner()){
+    if(!winner()){
+      takeTurns()
+      oneRound()
+    }
+  }
+})
+
+
+
+
+
 
 
 
