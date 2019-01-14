@@ -4,12 +4,28 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" charset="utf-8"></script>
     <script src="app.js" charset="utf-8"></script>
   </head>
   <body>
-    <h1>BULLSHIT</h1>
-    <div id="discard-container"></div>
+    <!-- Caleb helped me with the modal! -->
+    <!-- <div id="modal">
+      <div id="modal-content">
+        <div id="modal-text">
+          <h2>Bullshit</h2>
+          <p>The card game where, unlike in real life, liars actually get punished. You go first.</p>
+          <button type="button" id="remove-modal-btn">let's do this</button>
+        </div>
+      </div>
+    </div> -->
+    <header>
+      <h1>Bullshit</h1>
+    </header>
+    <div id="discard-container">
+      <div id="card-container"></div>
+      <div id="text-container"></div>
+    </div>
     <div id="player-container">
       <div class="playerBox">
         <div class="playerTitle">Opponent 1</div>
@@ -18,8 +34,8 @@
       <div class="playerBox" id="userBox">
         <div id="buttonDiv">
           <button id="done-btn">done</button>
-          <button id="bs-btn">BULLSHIT</button>
-          <button id="noBS-btn">no BS</button>
+          <button id="bs-btn">bullshit</button>
+          <button id="noBS-btn">checks out</button>
         </div>
         <div id="cardDiv">
         </div>

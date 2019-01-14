@@ -22,9 +22,9 @@ class Player {
     }
     if ((currentPlayer.currentRoundDiscard + this.numCurrentPositionCards) > 4){
       bullshitCalled = true;
-      alert(this.name + ' accuses ' + currentPlayer.name + ' of lying!')
+      $('#text-container').text(this.name + ' accuses ' + currentPlayer.name + ' of lying!')
       if (currentPlayer.isLying){
-        alert(currentPlayer.name + ' WAS lying!')
+        $('#text-container').text(currentPlayer.name + ' WAS lying!')
           currentPlayer.deck = currentPlayer.deck.concat(discardPile)
           sortDeck(currentPlayer)
           if(currentPlayer === user){
@@ -33,9 +33,9 @@ class Player {
             insertCardImgOpponents(currentPlayer)
           }
           discardPile.length = 0;
-          $('#discard-container').empty()
+          $('#card-container').empty()
       } else {
-        alert(currentPlayer.name + ' was NOT lying!')
+        $('#text-container').text(currentPlayer.name + ' was NOT lying!')
         this.deck = this.deck.concat(discardPile)
         sortDeck(this)
         if(currentPlayer === user){
@@ -44,7 +44,7 @@ class Player {
           insertCardImgOpponents(currentPlayer)
         }
         discardPile.length = 0;
-        $('#discard-container').empty()
+        $('#card-container').empty()
       }
       this.numCurrentPositionCards = 0
     }
@@ -67,10 +67,14 @@ $.ajax({
   }
 })
 
+const nonsense = () => {
+  console.log('nonsense');
+}
+
 const winner = () => {
   for(let i = 0; i < players.length; i++){
     if (players[i].deck.length === 0){
-      alert(players[i].name + ' wins!')
+      $('#text-container').text(players[i].name + ' wins!')
       return true
     } else {
       return false
@@ -120,7 +124,7 @@ const insertCardImgUser = () => {
       if(user.turn){
         user.currentRoundDiscard++
         event.target.remove()
-        $('#discard-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
+        $('#card-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
         if(event.target.className !== cardOrderPosition()){
           user.isLying = true
         }
@@ -159,7 +163,7 @@ const opponentDiscard = (player, card) => {
       player.deck.splice(i, 1)
       player.currentRoundDiscard++
       $('#' + player.name).children('img').eq(0).remove()
-      $('#discard-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
+      $('#card-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
     }
   }
   if (player.currentRoundDiscard === 0){
@@ -168,20 +172,20 @@ const opponentDiscard = (player, card) => {
     player.currentRoundDiscard++
     player.isLying = true
     $('#' + player.name).children('img').eq(0).remove()
-    $('#discard-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
+    $('#card-container').append($('<img>').attr('src', 'playing-card-back.jpg'))
   }
 }
 
 const alertMove = (player) => {
   if (player.currentRoundDiscard === 0){
-    alert(player.name + ' played NO ' + cardOrderPosition() + '\'s!')
+    $('#text-container').text(player.name + ' played NO ' + cardOrderPosition() + '\'s!')
   } else if (player.currentRoundDiscard === 1){
-    alert(player.name + ' played ' + player.currentRoundDiscard + ' "' + cardOrderPosition() + '"')
+    $('#text-container').text(player.name + ' played ' + player.currentRoundDiscard + ' "' + cardOrderPosition() + '"')
   } else {
-    alert(player.name + ' played ' + player.currentRoundDiscard + ' ' + cardOrderPosition() + '\'s!')
+    $('#text-container').text(player.name + ' played ' + player.currentRoundDiscard + ' ' + cardOrderPosition() + '\'s!')
   }
   if (player.isLying){
-    alert(player.name + ' is lying!')
+    $('#text-container').text(player.name + ' is lying!')
   }
 
 }
@@ -239,6 +243,7 @@ const oneRound = () => {
 $('#done-btn').on('click', () => {
   if (user.turn && !winner()){
     alertMove(user)
+
     opponent1.checkLying(user)
     if(!bullshitCalled){
       opponent2.checkLying(user)
@@ -257,22 +262,22 @@ $('#done-btn').on('click', () => {
 
 $('#bs-btn').on('click', () => {
   if(bullshitCalled === false && user.turn === false && !winner()){
-    alert(user.name + ' accused ' + returnCurrentPlayer().name + ' of lying!')
+    $('#text-container').text(user.name + ' accused ' + returnCurrentPlayer().name + ' of lying!')
     if(returnCurrentPlayer().isLying){
-      alert(returnCurrentPlayer().name + ' WAS lying!')
+      $('#text-container').text(returnCurrentPlayer().name + ' WAS lying!')
       returnCurrentPlayer().deck = returnCurrentPlayer().deck.concat(discardPile)
       sortDeck(returnCurrentPlayer())
       insertCardImgOpponents(returnCurrentPlayer())
       discardPile.length = 0;
-      $('#discard-container').empty()
+      $('#card-container').empty()
 
     } else {
-      alert(returnCurrentPlayer().name + ' was NOT lying!')
+      $('#text-container').text(returnCurrentPlayer().name + ' was NOT lying!')
       user.deck = user.deck.concat(discardPile)
       sortDeck(user)
       insertCardImgUser()
       discardPile.length = 0;
-      $('#discard-container').empty()
+      $('#card-container').empty()
     }
 
     if(!winner()){
@@ -289,6 +294,10 @@ $('#noBS-btn').on('click', () => {
       oneRound()
     }
   }
+})
+
+$('#remove-modal-btn').on('click', () => {
+  $('#modal').hide()
 })
 
 
