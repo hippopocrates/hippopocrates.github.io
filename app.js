@@ -22,9 +22,9 @@ class Player {
     }
     if ((currentPlayer.currentRoundDiscard + this.numCurrentPositionCards) > 4){
       bullshitCalled = true;
-      $('#text-container').append(this.name + ' accuses ' + currentPlayer.name + ' of lying!')
+      $('#text-container').append(this.name + ' accuses ' + currentPlayer.name + ' of lying!<br />')
       if (currentPlayer.isLying){
-        $('#text-container').append(currentPlayer.name + ' WAS lying!')
+        $('#text-container').append(currentPlayer.name + ' WAS lying!<br />')
           currentPlayer.deck = currentPlayer.deck.concat(discardPile)
           sortDeck(currentPlayer)
           if(currentPlayer === user){
@@ -35,7 +35,7 @@ class Player {
           discardPile.length = 0;
           $('#card-container').empty()
       } else {
-        $('#text-container').append(currentPlayer.name + ' was NOT lying!')
+        $('#text-container').append(currentPlayer.name + ' was NOT lying!<br />')
         this.deck = this.deck.concat(discardPile)
         sortDeck(this)
         if(currentPlayer === user){
@@ -74,7 +74,7 @@ const nonsense = () => {
 const winner = () => {
   for(let i = 0; i < players.length; i++){
     if (players[i].deck.length === 0){
-      $('#text-container').append(players[i].name + ' wins!')
+      $('#text-container').append(players[i].name + ' wins!<br />')
       return true
     } else {
       return false
@@ -185,7 +185,7 @@ const alertMove = (player) => {
     $('#text-container').append(player.name + ' played ' + player.currentRoundDiscard + ' ' + cardOrderPosition() + '\'s!<br />')
   }
   if (player.isLying){
-    $('#text-container').append(player.name + ' is lying!')
+    $('#text-container').append(player.name + ' is lying!<br />')
   }
 
 }
@@ -262,9 +262,9 @@ $('#done-btn').on('click', () => {
 
 $('#bs-btn').on('click', () => {
   if(bullshitCalled === false && user.turn === false && !winner()){
-    $('#text-container').append(user.name + ' accused ' + returnCurrentPlayer().name + ' of lying!')
+    $('#text-container').append(user.name + ' accused ' + returnCurrentPlayer().name + ' of lying!<br />')
     if(returnCurrentPlayer().isLying){
-      $('#text-container').append(returnCurrentPlayer().name + ' WAS lying!')
+      $('#text-container').append(returnCurrentPlayer().name + ' WAS lying!<br />')
       returnCurrentPlayer().deck = returnCurrentPlayer().deck.concat(discardPile)
       sortDeck(returnCurrentPlayer())
       insertCardImgOpponents(returnCurrentPlayer())
@@ -272,7 +272,7 @@ $('#bs-btn').on('click', () => {
       $('#card-container').empty()
 
     } else {
-      $('#text-container').append(returnCurrentPlayer().name + ' was NOT lying!')
+      $('#text-container').append(returnCurrentPlayer().name + ' was NOT lying!<br />')
       user.deck = user.deck.concat(discardPile)
       sortDeck(user)
       insertCardImgUser()
