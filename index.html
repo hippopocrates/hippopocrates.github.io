@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Pacifico"
+      rel="stylesheet"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      charset="utf-8"
+    ></script>
     <script src="app.js" charset="utf-8"></script>
   </head>
   <body>
-    <!-- Caleb helped me with the modal! -->
     <div id="modal">
       <div id="modal-content">
         <div id="modal-text">
           <h2>Bullshit</h2>
-          <p>The card game where, unlike in real life, liars actually get called out the way god intended. <br>You go first.</p>
-          <button type="button" id="remove-modal-btn">let's do this</button>
+          <div id="modal-subtext">
+            <p>
+              The card game where, unlike in real life, liars actually get
+              called out the way god intended.
+            </p>
+          </div>
+          <div id="modal-btns">
+            <button type="button" id="instructions-btn">instructions</button>
+            <button type="button" id="remove-modal-btn">let's do this</button>
+          </div>
         </div>
       </div>
     </div>
-    <header>
-      <h1>Bullshit</h1>
-    </header>
+    <header><h1>Bullshit</h1></header>
     <div id="discard-container">
       <div id="card-container"></div>
-      <div id="text-container"></div>
+      <div id="text-container">
+        <p id="scroll-text">Put down your Aces ...or lie!</p>
+        <p id="scroll-text">don't forget to scroll &#x2665;</p>
+      </div>
     </div>
     <div id="player-container">
       <div class="playerBox">
@@ -37,14 +51,12 @@
           <button id="bs-btn">bullshit</button>
           <button id="noBS-btn">checks out</button>
         </div>
-        <div id="cardDiv">
-        </div>
+        <div id="cardDiv"></div>
       </div>
       <div class="playerBox">
         <div class="playerTitle">Opponent 2</div>
         <div id="Opponent-2"></div>
       </div>
     </div>
-
   </body>
 </html>
