@@ -52,6 +52,8 @@ $(() => {
           }
           discardPile.length = 0;
           $("#card-container").empty();
+          takeTurns();
+          oneRound();
         } else {
           $("#text-container").append(
             currentPlayer.name + " was NOT lying!<br />"
